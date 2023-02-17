@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.milk.job.system.mapper.ApplicationMapper">
+  <resultMap id="BaseResultMap" type="com.milk.job.model.pojo.Application">
+    <!--@mbg.generated-->
+    <!--@Table `application`-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="apply_time" jdbcType="TIMESTAMP" property="applyTime" />
+    <result column="resume_id" jdbcType="INTEGER" property="resumeId" />
+    <result column="position_id" jdbcType="INTEGER" property="positionId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="hr_id" jdbcType="INTEGER" property="hrId" />
+    <result column="company_id" jdbcType="INTEGER" property="companyId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+  </resultMap>
+
+  <resultMap id="applyMap" type="java.util.Map">
+
+
+
+</resultMap>
+
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, `state`, apply_time, resume_id, position_id, user_id, hr_id, company_id, create_time, 
+    update_time, is_delete
+  </sql>
+    <delete id="batchRemoveById">
+        update  application set is_delete =1 ,update_time=(localtime()) where id in
+            <foreach collection="ids" item="id" close=")" open="(" separator=",">
+                #{id}
+            </foreach>
+        and is_delete = 0
+    </delete>
+    <update id="batchChangeState">
+      update  application set state = 1 where id in
+            <foreach collection="ids" item="id" close=")" open="(" separator=",">
+                #{id}
+            </foreach>
+        and is_delete = 0 and state = 2
+    </update>
+    <update id="batchRefuse">
+     update  application set state = 0 where id in
+            <foreach collection="ids" item="id" close=")" open="(" separator=",">
+                #{id}
+            </foreach>
+        and is_delete = 0 and state = 2
+    </update>
+
+    <select id="getApplyByUserId" resultType="map">
+
+    select a.id, a.apply_time,a.state,c.id as companyId,c.logo,c.name ,p.id as positionId, p.title, p.requirement, p.quantity, p.city, p.salary_up, p.salary_down, p.release_date
+    from application a
+    join company c on a.company_id = c.id
+    join position p on a.position_id = p.id
+    <where>
+    1=1
+    <if test="state != null and state !=''">
+    and a.state = #{state}
+    </if>
+    </where>
+    and a.user_id = #{id,jdbcType=INTEGER} and a.is_delete = 0 and c.state = 1 and c.is_delete = 0 and p.state = 1 and p.is_delete = 0
+</select>
+</mapper>

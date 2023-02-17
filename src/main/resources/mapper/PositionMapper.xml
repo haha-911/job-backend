@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.milk.job.system.mapper.PositionMapper">
+  <resultMap id="BaseResultMap" type="com.milk.job.model.pojo.Position">
+    <!--@mbg.generated-->
+    <!--@Table `position`-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="requirement" jdbcType="LONGVARCHAR" property="requirement" />
+    <result column="quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="salary_up" jdbcType="INTEGER" property="salaryUp" />
+    <result column="salary_down" jdbcType="INTEGER" property="salaryDown" />
+    <result column="release_date" jdbcType="TIMESTAMP" property="releaseDate" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="hits" jdbcType="INTEGER" property="hits" />
+    <result column="category_id" jdbcType="INTEGER" property="categoryId" />
+    <result column="hr_id" jdbcType="INTEGER" property="hrId" />
+    <result column="company_id" jdbcType="INTEGER" property="companyId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, title, requirement, quantity, city, salary_up, salary_down, release_date, `state`, 
+    hits, category_id, hr_id, company_id, create_time, update_time, is_delete
+  </sql>
+
+  <insert id="batchInsert" keyColumn="id" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into `position`
+    (title, requirement, quantity, city, salary_up, salary_down, release_date, `state`, 
+      hits, category_id, hr_id, company_id, create_time, update_time, is_delete)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.title,jdbcType=VARCHAR}, #{item.requirement,jdbcType=LONGVARCHAR}, #{item.quantity,jdbcType=INTEGER}, 
+        #{item.city,jdbcType=VARCHAR}, #{item.salaryUp,jdbcType=INTEGER}, #{item.salaryDown,jdbcType=INTEGER}, 
+        #{item.releaseDate,jdbcType=TIMESTAMP}, #{item.state,jdbcType=INTEGER}, #{item.hits,jdbcType=INTEGER}, 
+        #{item.categoryId,jdbcType=INTEGER}, #{item.hrId,jdbcType=INTEGER}, #{item.companyId,jdbcType=INTEGER}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.isDelete,jdbcType=INTEGER}
+        )
+    </foreach>
+  </insert>
+
+  <select id="getAll" resultType="com.milk.job.model.dto.PositionDto">
+   select p.*,c.name as categoryName,u.username as hrName,co.name as companyName from position p
+      left join category c on p.category_id = c.id
+      left join user u on p.hr_id = u.id
+      left join company co on p.company_id = co.id
+      where p.is_delete = 0 and c.is_delete = 0 and u.is_delete = 0 and co.is_delete = 0
+   </select>
+
+  <select id="getPage" resultType="com.milk.job.model.dto.PositionDto">
+    select p.*,c.name as categoryName,u.username as hrName,co.name as companyName from position p
+      left join category c on p.category_id = c.id
+      left join user u on p.hr_id = u.id
+      left join company co on p.company_id = co.id
+      <where>
+           1=1
+         <if test="positionVo.categoryId !=null and positionVo.categoryId !=''">
+             and p.category_id= #{positionVo.categoryId}
+         </if>
+         <if test="positionVo.city !=null and positionVo.city !=''">
+            and p.city like concat('%',#{positionVo.city},'%')
+         </if>
+         <if test="positionVo.companyId !=null and positionVo.companyId !=''">
+            and p.company_id = #{positionVo.companyId}
+         </if>
+         <if test="positionVo.minSalary !=null and positionVo.minSalary != ''">
+            and p.salary_down &gt;= #{positionVo.minSalary}
+         </if>
+          <if test="positionVo.maxSalary !=null and positionVo.maxSalary != ''">
+            and p.salary_up &lt;= #{positionVo.maxSalary}
+         </if>
+    </where>
+      and p.is_delete = 0 and c.is_delete = 0 and u.is_delete = 0 and co.is_delete = 0 and p.state not in (2)
+    </select>
+
+    <select id="getPositionById" resultType="com.milk.job.model.dto.PositionDto">
+      select p.*,c.name as categoryName,u.username as hrName,u.nickname as nickName,u.avatar,co.name as companyName,co.city as companyCity,co.foreign_name,co.mission,co.logo from position p
+          join category c on p.category_id = c.id
+          join user u on p.hr_id = u.id
+          join company co on p.company_id = co.id
+          where p.is_delete = 0 and c.is_delete = 0 and u.is_delete = 0 and co.is_delete = 0 and p.id = #{id}
+  </select>
+    <select id="selectCountByCompanyId" resultType="java.lang.Integer">
+    select count(*) from position where company_id = #{id} and is_delete =0
+  </select>
+    <select id="selectCountByCategoryId" resultType="java.lang.Integer">
+      select count(*) from position where category_id = #{id} and is_delete =0
+    </select>
+
+    <select id="getPositionByCompanyId" resultMap="BaseResultMap">
+        select id, title, quantity, city, salary_up, salary_down, release_date, `state`,
+            hits from position where company_id = #{id} and is_delete = 0
+    </select>
+    <select id="getRefusePosition" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"></include> from position
+        <where>
+        <if test="positionVo.categoryId != null and positionVo.categoryId != ''">
+        and category_id = #{positionVo.categoryId,jdbcType=VARCHAR}
+        </if>
+        <if test="positionVo.city != null and positionVo.city != ''">
+        and city like concat('%',#{positionVo.city,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="positionVo.companyId != null and positionVo.companyId != ''">
+        and company_id = #{positionVo.companyId,jdbcType=VARCHAR}
+        </if>
+        and state =2 and is_delete =1
+        </where>
+
+
+    </select>
+
+    <select id="getJob" resultType="com.milk.job.model.dto.PositionDto">
+     select p.*,c.name as categoryName,u.username as hrName,u.nickname as nickName,u.avatar,co.logo,co.name as companyName from position p
+      left join category c on p.category_id = c.id
+      left join user u on p.hr_id = u.id
+      left join company co on p.company_id = co.id
+      <where>
+           1=1
+         <if test="positionVo.categoryId !=null and positionVo.categoryId !=''">
+             and p.category_id= #{positionVo.categoryId}
+         </if>
+         <if test="positionVo.city !=null and positionVo.city !=''">
+            and p.city like concat('%',#{positionVo.city},'%')
+         </if>
+          <if test="positionVo.name !=null and positionVo.name !=''">
+            and p.title like concat('%',#{positionVo.name},'%')
+         </if>
+         <if test="positionVo.companyId !=null and positionVo.companyId !=''">
+            and p.company_id = #{positionVo.companyId}
+         </if>
+         <if test="positionVo.releaseDate !=null and positionVo.releaseDate !=''">
+            and p.release_date &gt;= #{positionVo.releaseDate}
+         </if>
+         <if test="positionVo.minSalary !=null and positionVo.minSalary != ''">
+            and p.salary_down &gt;= #{positionVo.minSalary}
+         </if>
+          <if test="positionVo.maxSalary !=null and positionVo.maxSalary != ''">
+            and p.salary_up &lt;= #{positionVo.maxSalary}
+         </if>
+
+         and p.is_delete = 0 and p.state = 1
+    </where>
+    <if test="positionVo.sortCondition == 1">
+        order by p.release_date desc
+    </if>
+</select>
+</mapper>

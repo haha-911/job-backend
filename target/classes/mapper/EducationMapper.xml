@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.milk.job.system.mapper.EducationMapper">
+  <resultMap id="BaseResultMap" type="com.milk.job.model.pojo.Education">
+    <!--@mbg.generated-->
+    <!--@Table education-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="resume_id" jdbcType="INTEGER" property="resumeId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="major" jdbcType="VARCHAR" property="major" />
+    <result column="diploma" jdbcType="INTEGER" property="diploma" />
+    <result column="descriptions" jdbcType="VARCHAR" property="descriptions" />
+    <result column="start_time" jdbcType="DATE" property="startTime" />
+    <result column="end_time" jdbcType="DATE" property="endTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, resume_id, `name`, major, diploma, descriptions, start_time, end_time
+  </sql>
+  <insert id="batchInsert" keyColumn="id" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into education
+    (resume_id, `name`, major, diploma, descriptions, start_time, end_time)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.resumeId,jdbcType=INTEGER}, #{item.name,jdbcType=VARCHAR}, #{item.major,jdbcType=VARCHAR}, 
+        #{item.diploma,jdbcType=INTEGER}, #{item.descriptions,jdbcType=VARCHAR}, #{item.startTime,jdbcType=DATE}, 
+        #{item.endTime,jdbcType=DATE})
+    </foreach>
+  </insert>
+</mapper>

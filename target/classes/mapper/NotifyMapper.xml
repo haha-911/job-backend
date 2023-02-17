@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.milk.job.system.mapper.NotifyMapper">
+  <resultMap id="BaseResultMap" type="com.milk.job.model.pojo.Notify">
+    <!--@mbg.generated-->
+    <!--@Table `notify`-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="is_read" jdbcType="INTEGER" property="isRead" />
+    <result column="time" jdbcType="TIMESTAMP" property="time" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, content, user_id, title,is_read, `time`, create_time, update_time, is_delete
+  </sql>
+  <insert id="batchInsert">
+  insert into notify(content,user_id,create_time,update_time) values
+  <foreach collection="names" item="name" separator=",">
+  (#{content},#{name},localtime(),localtime())
+</foreach>
+</insert>
+    <select id="getPage" resultType="com.milk.job.model.dto.NotifyDto">
+    select n.*,u.username as name from notify n
+    join user u on n.user_id = u.id
+    <where>
+    <if test="notifyVo.isRead != null">
+    and is_read = #{notifyVo.isRead}
+</if>
+and n.is_delete  = 0
+</where>
+</select>
+<update id="updateNotifyIsRead">
+    update notify set is_read = 1,time=(localtime()) where id in
+    <foreach collection="ids" item="id" separator="," open="(" close=")" >
+    #{id,jdbcType=INTEGER}
+</foreach>
+and is_delete  =0 and is_read =0
+
+</update>
+
+</mapper>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.milk.job.system.mapper.ResumeMapper">
+  <resultMap id="BaseResultMap" type="com.milk.job.model.pojo.Resume">
+    <!--@Table resume-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="ability" jdbcType="LONGVARCHAR" property="ability" />
+    <result column="english" jdbcType="VARCHAR" property="english" />
+    <result column="sex" jdbcType="INTEGER" property="sex" />
+    <result column="age" jdbcType="INTEGER" property="age" />
+    <result column="home" jdbcType="VARCHAR" property="home" />
+    <result column="personal_summary" jdbcType="LONGVARCHAR" property="personalSummary" />
+    <result column="job_intention" jdbcType="VARCHAR" property="jobIntention" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+  </resultMap>
+
+  <resultMap id="ResumeResultMap" type="com.milk.job.model.dto.ResumeDto">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="ability" jdbcType="LONGVARCHAR" property="ability" />
+    <result column="english" jdbcType="VARCHAR" property="english" />
+    <result column="sex" jdbcType="INTEGER" property="sex" />
+    <result column="age" jdbcType="INTEGER" property="age" />
+    <result column="home" jdbcType="VARCHAR" property="home" />
+    <result column="personal_summary" jdbcType="LONGVARCHAR" property="personalSummary" />
+    <result column="job_intention" jdbcType="VARCHAR" property="jobIntention" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <collection property="experience" ofType="com.milk.job.model.pojo.Experience">
+        <id column="exper_id" property="id" />
+        <result column="exper_name" property="name" />
+        <result column="position" property="position" />
+        <result column="performance" property="performance" />
+        <result column="exper_start_time" property="startTime" />
+        <result column="exper_end_time" property="endTime" />
+    </collection>
+    <collection property="education" ofType="com.milk.job.model.pojo.Education">
+        <id column="edu_id" property="id" />
+        <result column="edu_name" property="name"/>
+        <result column="major" property="major"/>
+        <result column="diploma" property="diploma"/>
+        <result column="descriptions" property="descriptions"/>
+         <result column="edu_start_time" property="startTime" />
+        <result column="edu_end_time" property="endTime" />
+    </collection>
+    <collection property="project" ofType="com.milk.job.model.pojo.Project">
+         <id column="pro_id" property="id"/>
+        <result column="pro_name" property="name"/>
+        <result column="background" property="background"/>
+        <result column="pro_performance" property="performance"/>
+         <result column="pro_start_time" property="startTime" />
+        <result column="pro_end_time" property="endTime" />
+    </collection>
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, user_id, ability, english, sex, age, home, personal_summary, job_intention, create_time, 
+    update_time, is_delete
+  </sql>
+
+  <insert id="batchInsert" keyColumn="id" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into resume
+    (user_id, ability, english, sex, age, home, personal_summary, job_intention, create_time, 
+      update_time, is_delete)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.userId,jdbcType=INTEGER}, #{item.ability,jdbcType=LONGVARCHAR}, #{item.english,jdbcType=VARCHAR}, 
+        #{item.sex,jdbcType=INTEGER}, #{item.age,jdbcType=INTEGER}, #{item.home,jdbcType=VARCHAR}, 
+        #{item.personalSummary,jdbcType=LONGVARCHAR}, #{item.jobIntention,jdbcType=VARCHAR}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.isDelete,jdbcType=INTEGER}
+        )
+    </foreach>
+  </insert>
+
+  <select id="getResumeById" resultMap="ResumeResultMap">
+      select r.*,edu.descriptions,edu.diploma,edu.id as edu_id ,edu.name as edu_name,edu.major,edu.start_time as edu_start_time,
+      edu.end_time as edu_end_time,
+      exper.id as exper_id ,exper.name as exper_name, exper.position, exper.start_time as exper_start_time, exper.end_time as exper_end_time, exper.performance,
+      p.id as pro_id ,p.name as pro_name,p.start_time as pro_start_time,
+      p.end_time as pro_end_time,p.background ,p.performance as pro_performance
+      from resume r
+      left join education edu on r.id = edu.resume_id
+      left join experience exper on r.id = exper.resume_id
+      left join project p on r.id = p.resume_id
+      where r.user_id = #{id} AND is_delete = 0
+  </select>
+
+  <select id="getPageResume" resultMap="ResumeResultMap">
+      select r.*,edu.descriptions,edu.diploma,edu.id as edu_id ,edu.name as edu_name,edu.major,edu.start_time as edu_start_time,
+      edu.end_time as edu_end_time,exper.id as exper_id , exper.name as exper_name, exper.position, exper.start_time as exper_start_time, exper.end_time as exper_end_time, exper.performance
+      from resume r
+      left join education edu on r.id = edu.resume_id
+      left join experience exper on r.id = exper.resume_id
+      <where>
+            1=1
+            <if test="resumeVo.diploma !=null">
+            and edu.diploma = #{resumeVo.diploma}
+            </if>
+            <if test="resumeVo.major!=null and resumeVo.major !=''">
+            and edu.major = #{resumeVo.major}
+            </if>
+            <if test="resumeVo.position != null and resumeVo.position != ''">
+            and exper.position = #{resumeVo.position}
+            </if>
+      </where>
+      and is_delete = 0
+  </select>
+  <select id="getExpectByUserId" resultType="java.lang.String">
+       select job_intention from resume where user_id = #{id,jdbcType=INTEGER}
+</select>
+<select id="getIdByUserId" resultType="java.lang.Integer">
+select id from resume where user_id = #{id,jdbcType=INTEGER}
+</select>
+</mapper>
