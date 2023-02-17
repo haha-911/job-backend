@@ -79,7 +79,7 @@
     </select>
 
     <select id="getPositionById" resultType="com.milk.job.model.dto.PositionDto">
-      select p.*,c.name as categoryName,u.username as hrName,u.nickname as nickName,u.avatar,co.name as companyName,co.city as companyCity,co.foreign_name,co.mission,co.logo from position p
+      select p.*,c.name as categoryName,u.email,u.nickname as nickName,u.avatar,co.name as companyName,co.city as companyCity,co.foreign_name,co.mission,co.logo from position p
           join category c on p.category_id = c.id
           join user u on p.hr_id = u.id
           join company co on p.company_id = co.id
@@ -115,7 +115,7 @@
     </select>
 
     <select id="getJob" resultType="com.milk.job.model.dto.PositionDto">
-     select p.*,c.name as categoryName,u.username as hrName,u.nickname as nickName,u.avatar,co.logo,co.name as companyName from position p
+     select p.*,c.name as categoryName,u.email,u.nickname as nickName,u.avatar,co.logo,co.name as companyName from position p
       left join category c on p.category_id = c.id
       left join user u on p.hr_id = u.id
       left join company co on p.company_id = co.id
