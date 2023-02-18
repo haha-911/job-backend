@@ -6,8 +6,12 @@ import com.milk.job.common.enums.ResultEnum;
 import com.milk.job.common.exceptions.CustomerException;
 import com.milk.job.common.utils.TokenUtils;
 import com.milk.job.model.dto.UserDto;
+import com.milk.job.model.pojo.Company;
+import com.milk.job.model.pojo.HrCompany;
 import com.milk.job.model.pojo.LoginLog;
 import com.milk.job.model.pojo.User;
+import com.milk.job.system.service.CompanyService;
+import com.milk.job.system.service.HrCompanyService;
 import com.milk.job.system.service.LoginLogService;
 import com.milk.job.system.service.UserService;
 import io.swagger.annotations.Api;
@@ -34,6 +38,9 @@ public class LoginController {
 
     @Resource
     private LoginLogService loginLogService;
+
+    @Resource
+    private HrCompanyService hrCompanyService;
 
     @PostMapping("/login")
     @ApiOperation("后台管理员登录")
@@ -78,12 +85,26 @@ public class LoginController {
         return R.success(user);
     }
 
+    @PostMapping("/getHR")
+    @ApiOperation("由token获取HR信息")
+    public R getHRInfo(HttpServletRequest request){
+
+        String token = request.getHeader("token");
+        Integer userId = TokenUtils.getUserId(token);
+        if (userId == null){
+            throw new CustomerException(ResultEnum.LOGIN_AUTH);
+        }
+        User user = userService.getById(userId);
+        HrCompany hrCompany = hrCompanyService.getHrCompanyByUserId(userId);
+        user.setCompanyId(hrCompany.getCompanyId());
+        user.setPassword("");
+        return R.success(user);
+    }
+
 
     @GetMapping("/getCount")
     @ApiOperation("获取数量")
     public R getCount(){
-
-//        Map<String ,Integer> map = userService.getCount();
 
         return R.success();
         
@@ -93,7 +114,6 @@ public class LoginController {
     @ApiOperation("获取上一次登录记录")
     public R getPrevLogin(@PathVariable("username") String  name){
         LoginLog info = loginLogService.getPrevLogin(name);
-
         return R.success(info);
     }
 }

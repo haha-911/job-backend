@@ -100,9 +100,7 @@ public class CompanyController {
     @GetMapping("/get/{id}")
     @ApiOperation(value = "根据id查询公司")
     public R getOne(@PathVariable("id") Integer id){
-
         Company company = companyService.getById(id);
-
         return R.success(company);
     }
 }

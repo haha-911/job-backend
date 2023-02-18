@@ -37,7 +37,7 @@ public interface PositionService extends IService<Position> {
 
     Page<PositionDto> getPositionByCategoryId(LimitVo limitVo, Integer id);
 
-    Page<PositionDto> getPositionByHRId(LimitVo limitVo, Integer id);
+    Page<Position> getPositionByHRId(PositionVo positionVo);
 
     void batchDelete(List<Integer> ids);
 

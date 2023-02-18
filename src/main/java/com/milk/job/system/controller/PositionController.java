@@ -65,8 +65,7 @@ public class PositionController {
     @ApiOperation(value = "根据ID查询职位")
     public R getPositionById(@PathVariable("id") Integer id){
 
-        PositionDto position = positionService.getPositionById(id);
-
+        Position position = positionService.getById(id);
         return R.success(position);
     }
 
@@ -172,12 +171,12 @@ public class PositionController {
         return R.success(positionDtoList);
     }
 
-    @PostMapping("/hr/{id}")
+    @PostMapping("/HR")
     @ApiOperation(value = "根据HR——ID查询职位信息")
-    public R getPositionByHRId(@RequestBody LimitVo limitVo,@PathVariable("id") Integer id){
+    public R getPositionByHRId(@RequestBody PositionVo positionVo){
 
-        Page<PositionDto> positionDtoList = positionService.getPositionByHRId(limitVo,id);
-
-        return R.success(positionDtoList);
+        log.info("{}",positionVo);
+        Page<Position> positionList = positionService.getPositionByHRId(positionVo);
+        return R.success(positionList);
     }
 }

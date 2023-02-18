@@ -175,12 +175,13 @@ public class PositionServiceImpl extends ServiceImpl<PositionMapper, Position> i
     }
 
     @Override
-    public Page<PositionDto> getPositionByHRId(LimitVo limitVo,Integer id) {
-        Page<Position> page = new Page<>(limitVo.getPage(),limitVo.getPageSize());
+    public Page<Position> getPositionByHRId(PositionVo positionVo) {
+        Page<Position> page = new Page<>(positionVo.getPage(),positionVo.getPageSize());
         LambdaQueryWrapper<Position> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Position::getHrId,id);
-        Page<Position> positionPage = this.page(page,queryWrapper);
-        return  getPositionDtoPage(positionPage);
+        queryWrapper.eq(Position::getHrId,positionVo.getHrId());
+
+            queryWrapper.eq(Position::getState,positionVo.getState());
+         return this.page(page,queryWrapper);
     }
 
 

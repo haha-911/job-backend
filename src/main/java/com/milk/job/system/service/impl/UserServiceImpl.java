@@ -111,11 +111,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (user.getId() == null){
             throw new CustomerException(ResultEnum.ARGUMENT_VALID_ERROR);
         }
-
-        if (user.getType() !=null && user.getType() == 3){
-            Integer hrId = user.getId();
-            hrCompanyService.updateHrCompany(hrId,user.getCompanyId());
-        }
         this.updateById(user);
 
     }
