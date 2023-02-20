@@ -169,7 +169,6 @@ public class ApplicationServiceImpl extends ServiceImpl<ApplicationMapper, Appli
         String memo = (String) map.get("memo");
         String time  = (String) map.get("time");
         for (Integer id: ids) {
-
             Application application = this.getById(id);
             this.saveInterview(application,address,memo,time);
             Integer state = 1;

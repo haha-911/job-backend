@@ -45,7 +45,6 @@
             <if test="interviewVo.positionId != null">
             and i.position_id = #{interviewVo.positionId,jdbcType=INTEGER}
             </if>
-
             and i.is_delete = 0
         </where>
   </select>
@@ -64,14 +63,10 @@
 </select>
 
   <select id="getInterviewByHrId" resultType="com.milk.job.model.dto.InterviewDto">
-  select i.*,p.title,c.name as companyName,
-                u.username as userName ,u.email as uemail ,u.tel as utel,
-                h.username as HRName
+  select i.*,p.title,u.nickname ,u.email ,u.tel
                 from interview i
-                join company c on i.company_id = c.id
                 join user u on i.user_id = u.id
-                join user h on i.hr_id = h.id
                 join position p on i.position_id = p.id
-            where i.is_delete = 0 and i.hr_id = #{id}
+            where i.is_delete = 0 and i.hr_id = #{inter.hrId} and status = #{inter.state,jdbcType=VARCHAR}
 </select>
 </mapper>

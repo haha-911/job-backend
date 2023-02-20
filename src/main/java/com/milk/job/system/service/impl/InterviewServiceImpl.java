@@ -69,8 +69,10 @@ public class InterviewServiceImpl extends ServiceImpl<InterviewMapper, Interview
     }
 
     @Override
-    public List<InterviewDto> getInterviewByHrId(Integer id) {
-        return interviewMapper.getInterviewByHrId(id);
+    public Page<InterviewDto> getInterviewByHrId(InterviewVo  interviewVo) {
+
+        Page<Interview> page = new Page<>(interviewVo.getPage(),interviewVo.getPageSize());
+        return interviewMapper.getInterviewByHrId(page,interviewVo);
     }
 
     @Override
@@ -82,18 +84,14 @@ public class InterviewServiceImpl extends ServiceImpl<InterviewMapper, Interview
                 throw new CustomerException(ResultEnum.ARGUMENT_VALID_ERROR);
             }
 
-
             if (interview.getStatus() != 2) {
                 throw new CustomerException(ResultEnum.ARGUMENT_VALID_ERROR);
             }
-
-
             interview.setStatus(1);
             Notify notify = new Notify();
             notify.setUserId(interview.getUserId());
             notify.setTitle("你的面试通过啦！");
             threadService.addNotify(notifyService,notify);
-
             this.updateById(interview);
         }
 

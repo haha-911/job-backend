@@ -37,18 +37,15 @@ public class ApplicationController {
 
     @Resource
     private ApplicationService applicationService;
-    @Resource
-    private ResumeService resumeService;
+
 
 
     @PostMapping("/page")
     @ApiOperation(value = "根据条件查询申请表单")
     public R getPage(@RequestBody ApplicationVo applicationVo){
-        long start = System.currentTimeMillis();
-        Page<ApplicationDto> page = applicationService.getPage(applicationVo);
-        long end =System.currentTimeMillis();
 
-        log.info("花费时间：{}",end-start);
+        Page<ApplicationDto> page = applicationService.getPage(applicationVo);
+
 
         return R.success(page);
     }
@@ -59,14 +56,10 @@ public class ApplicationController {
 
         if(application.getCompanyId() == null || application.getUserId() == null ||
                 application.getPositionId() == null ||
-                application.getHrId() == null ){
+                application.getHrId() == null || application.getResumeId() == null ){
             throw new CustomerException(ResultEnum.ARGUMENT_VALID_ERROR);
         }
         application.setApplyTime(LocalDateTime.now());
-
-        Integer resumeId = resumeService.getIdByUserId(application.getUserId());
-
-        application.setResumeId(resumeId);
 
         applicationService.save(application);
 

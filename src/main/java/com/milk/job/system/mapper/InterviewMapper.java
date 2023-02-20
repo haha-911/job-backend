@@ -23,5 +23,5 @@ public interface InterviewMapper extends BaseMapper<Interview> {
 
     Page<Map<String,Object>> getInterviewByUserId( Page<Map<String,Object>> page,@Param("id") Integer id,@Param("state") String  state );
 
-    List<InterviewDto> getInterviewByHrId(@Param("id") Integer id);
+    Page<InterviewDto> getInterviewByHrId(Page<Interview> page,@Param("inter") InterviewVo  interviewVo);
 }

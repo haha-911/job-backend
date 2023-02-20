@@ -16,5 +16,7 @@ public class InterviewVo extends LimitVo {
 
     private String  state;
 
+    private Integer hrId;
+
 
 }

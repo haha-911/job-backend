@@ -25,7 +25,7 @@ public interface InterviewService extends IService<Interview>{
 
     Page<Map<String,Object>> getInterviewByUserId( Integer id ,InterviewVo interviewVo);
 
-    List<InterviewDto> getInterviewByHrId(Integer id);
+    Page<InterviewDto> getInterviewByHrId(InterviewVo  interviewVo);
 
     void passInterview( List<Interview> interview);
 

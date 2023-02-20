@@ -67,7 +67,9 @@ public class CompanyController {
     @PostMapping("/add")
     @ApiOperation(value = "添加公司")
     public R addCompany(@RequestBody Company company){
-       companyService.save(company);
+
+        log.info("数据：{}",company);
+       companyService.addCompany(company);
         return R.success("添加成功！");
     }
 

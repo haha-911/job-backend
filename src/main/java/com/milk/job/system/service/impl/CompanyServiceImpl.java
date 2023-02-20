@@ -7,6 +7,7 @@ import com.milk.job.common.R;
 import com.milk.job.common.enums.ResultEnum;
 import com.milk.job.common.exceptions.CustomerException;
 import com.milk.job.model.dto.CompanyDto;
+import com.milk.job.model.pojo.HrCompany;
 import com.milk.job.model.pojo.Position;
 import com.milk.job.model.vo.CompanyVo;
 import com.milk.job.system.mapper.HrCompanyMapper;
@@ -143,6 +144,17 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
     public void batchDelCompany(List<Integer> ids) {
         for (Integer id : ids) {
             this.delCompany(id);
+        }
+    }
+
+    @Override
+    public void addCompany(Company company) {
+        this.save(company);
+        if (company.getHrId() != null){
+            HrCompany hrCompany = new HrCompany();
+            hrCompany.setHrId(company.getHrId());
+            hrCompany.setCompanyId(company.getId());
+            hrCompanyMapper.insert(hrCompany);
         }
     }
 }

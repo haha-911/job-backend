@@ -62,10 +62,10 @@ public class PositionController {
         return R.success(count);
     }
     @GetMapping("/get/{id}")
-    @ApiOperation(value = "根据ID查询职位")
+    @ApiOperation(value = "前端根据ID查询职位")
     public R getPositionById(@PathVariable("id") Integer id){
 
-        Position position = positionService.getById(id);
+        PositionDto position = positionService.getPositionById(id);
         return R.success(position);
     }
 

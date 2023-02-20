@@ -53,7 +53,6 @@ public class UserController {
     public R updateUser(@RequestBody User user){
 
         userService.updateUser(user);
-
         return R.success("修改成功！");
     }
     @PutMapping("/avatar")

@@ -53,7 +53,6 @@ public class PositionServiceImpl extends ServiceImpl<PositionMapper, Position> i
 
     @Override
     public PositionDto getPositionById(Integer id) {
-
         PositionDto positionDto = positionMapper.getPositionById(id);
         return positionDto;
     }

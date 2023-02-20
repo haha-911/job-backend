@@ -19,7 +19,6 @@ public class ApplicationVo extends LimitVo {
      */
     private String  state;
 
-
     private String applyTimeStart;
 
     private String applyTimeEnd;

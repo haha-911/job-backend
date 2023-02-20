@@ -6,14 +6,8 @@ import com.milk.job.common.enums.ResultEnum;
 import com.milk.job.common.exceptions.CustomerException;
 import com.milk.job.common.utils.TokenUtils;
 import com.milk.job.model.dto.UserDto;
-import com.milk.job.model.pojo.Company;
-import com.milk.job.model.pojo.HrCompany;
-import com.milk.job.model.pojo.LoginLog;
-import com.milk.job.model.pojo.User;
-import com.milk.job.system.service.CompanyService;
-import com.milk.job.system.service.HrCompanyService;
-import com.milk.job.system.service.LoginLogService;
-import com.milk.job.system.service.UserService;
+import com.milk.job.model.pojo.*;
+import com.milk.job.system.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +35,8 @@ public class LoginController {
 
     @Resource
     private HrCompanyService hrCompanyService;
+    @Resource
+    private ResumeService resumeService;
 
     @PostMapping("/login")
     @ApiOperation("后台管理员登录")
@@ -81,7 +77,12 @@ public class LoginController {
         }
 
         User user = userService.getById(userId);
-        user.setPassword("");
+
+        Resume resume = resumeService.getResumeByUserId(user.getId());
+        if (resume != null) {
+            user.setResumeId(resume.getId());
+        }
+        user.setPassword(null);
         return R.success(user);
     }
 
@@ -96,8 +97,10 @@ public class LoginController {
         }
         User user = userService.getById(userId);
         HrCompany hrCompany = hrCompanyService.getHrCompanyByUserId(userId);
-        user.setCompanyId(hrCompany.getCompanyId());
-        user.setPassword("");
+        if(hrCompany != null){
+            user.setCompanyId(hrCompany.getCompanyId());
+        }
+        user.setPassword(null);
         return R.success(user);
     }
 

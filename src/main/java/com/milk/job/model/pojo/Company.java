@@ -98,5 +98,8 @@ public class Company implements Serializable {
     @TableLogic
     private Integer isDelete;
 
+    @TableField(exist = false)
+    private Integer hrId;
+
     private static final long serialVersionUID = 1L;
 }

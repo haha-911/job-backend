@@ -47,11 +47,11 @@ public class InterviewController {
         return R.success(page);
     }
 
-    @GetMapping("/hr/{id}")
-    @ApiOperation(value = "跟据HRid获取")
-    public R getByHRId(@PathVariable("id") Integer id){
+    @PostMapping("/HR")
+    @ApiOperation(value = "跟据HR获取")
+    public R getByHRId(@RequestBody InterviewVo  interviewVo){
 
-        List<InterviewDto> interviewDto = interviewService.getInterviewByHrId(id);
+        Page<InterviewDto> interviewDto = interviewService.getInterviewByHrId(interviewVo);
 
         return R.success(interviewDto);
     }

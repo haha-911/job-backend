@@ -13,4 +13,6 @@ public class CompanyVo extends LimitVo {
     private Integer state;
 
     private String name;
+
+    private Integer hrId;
 }

@@ -31,4 +31,6 @@ public interface CompanyService extends IService<Company>{
     void batchChangeState(List<Integer> ids);
 
     void batchDelCompany(List<Integer> ids);
+
+    void addCompany(Company company);
 }
