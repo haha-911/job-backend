@@ -26,7 +26,8 @@ public enum ResultEnum {
     ACCOUNT_NULL(215,"账号不存在"),
     USER_TYPE_ERROR(216,"身份识别失败！"),
     ACCOUNT_STOP( 217, "账号已停用"),
-    NODE_ERROR( 218, "该节点下有子节点，不可以操作");
+    NODE_ERROR( 218, "该节点下有子节点，不可以操作"),
+    EMAIL_CODE_ERROR( 219, "邮箱验证码错误！");
 
     private Integer code;
 

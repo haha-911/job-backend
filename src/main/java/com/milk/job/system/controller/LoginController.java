@@ -29,10 +29,8 @@ public class LoginController {
 
     @Resource
     private UserService userService;
-
     @Resource
     private LoginLogService loginLogService;
-
     @Resource
     private HrCompanyService hrCompanyService;
     @Resource
@@ -104,13 +102,22 @@ public class LoginController {
         return R.success(user);
     }
 
+    @PostMapping("/sendCode")
+    @ApiOperation("发送邮箱验证码")
+    public R sendCode(@RequestParam("email") String email){
+        Boolean isSuccess = userService.sendCode(email);
+        if(isSuccess){
+            return R.success("验证码已发送！注意查收");
+        }
+        return R.fail("发送失败！");
+
+    }
+
 
     @GetMapping("/getCount")
     @ApiOperation("获取数量")
     public R getCount(){
-
         return R.success();
-        
     }
 
     @GetMapping("/prev/{username}")

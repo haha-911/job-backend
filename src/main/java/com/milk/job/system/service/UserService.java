@@ -40,5 +40,7 @@ public interface UserService extends IService<User>{
 
     void registry(User user);
 
+    Boolean sendCode(String email);
+
 //    Map<String, Integer> getCount();
 }

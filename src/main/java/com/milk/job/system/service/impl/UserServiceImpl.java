@@ -12,15 +12,18 @@ import com.milk.job.common.exceptions.CustomerException;
 import com.milk.job.common.log.Log;
 import com.milk.job.common.utils.Md5;
 import com.milk.job.common.utils.TokenUtils;
+import com.milk.job.common.utils.VerifyCodeUtils;
 import com.milk.job.model.dto.HrCompanyDto;
 import com.milk.job.model.dto.UserDto;
 import com.milk.job.model.pojo.HrCompany;
 import com.milk.job.model.vo.UserVo;
+import com.milk.job.system.service.EmailService;
 import com.milk.job.system.service.HrCompanyService;
 import com.milk.job.system.service.ResumeService;
 import io.swagger.v3.oas.models.media.PasswordSchema;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
@@ -49,12 +52,14 @@ import springfox.documentation.builders.PathSelectors;
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService{
 
-
     @Resource
     private HrCompanyService hrCompanyService;
 
     @Resource
     private RedisTemplate redisTemplate;
+
+    @Resource
+    private EmailService emailService;
 
     @Override
     public int batchInsert(List<User> list) {
@@ -110,6 +115,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         if (user.getId() == null){
             throw new CustomerException(ResultEnum.ARGUMENT_VALID_ERROR);
+        }
+
+        if(user.getEmail()!=null){
+            String code = (String)redisTemplate.opsForValue().get(user.getEmail());
+            log.info("Code:{},getCode():{}",code,user.getCode());
+            if (!user.getCode().equals(code)){
+                throw new CustomerException(ResultEnum.EMAIL_CODE_ERROR);
+            }
         }
         this.updateById(user);
 
@@ -220,15 +233,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (userInfo.getType() != 1){
             throw new CustomerException(ResultEnum.USER_TYPE_ERROR);
         }
-        String token = TokenUtils.createToken(userInfo.getUsername(), userInfo.getId());
-
-//        String key  = "LoginUserInfo"+"::"+userInfo.getId();
-//
-//        String value = JSON.toJSONString(userInfo);
-//
-//        redisTemplate.opsForValue().set(key,value, Duration.ofDays(1));
-
-        return token;
+        return TokenUtils.createToken(userInfo.getUsername(), userInfo.getId());
     }
 
     @Override
@@ -240,11 +245,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         User userInfo = this.getUserInfo(username,password);
 
-        if (userInfo.getType() !=  type){
+        if (userInfo.getType() != type){
             throw new CustomerException(ResultEnum.USER_TYPE_ERROR);
         }
-        String token = TokenUtils.createToken(userInfo.getUsername(), userInfo.getId());
-        return token;
+        return  TokenUtils.createToken(userInfo.getUsername(), userInfo.getId());
     }
 
     @Override
@@ -260,10 +264,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
 
         queryWrapper.eq(User::getUsername,user.getUsername());
-        User userInfo = this.getOne(queryWrapper);
-        if (userInfo !=null){
+        User verifyUserName = this.getOne(queryWrapper);
+        if (verifyUserName !=null){
             throw new CustomerException("用户名'"+user.getUsername()+"'已存在！",500);
         }
+
 
         String password = Md5.md5Digest(user.getPassword());
 
@@ -272,6 +277,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setAvatar("http://images.beibeiaunt.icu/jobimg/72d0786bad734967803d882ce5cbbbfc.jpg");
 
         this.save(user);
+
+    }
+
+    @Override
+    public Boolean sendCode(String email) {
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+
+        queryWrapper.eq(User::getEmail,email);
+        User verifyEmail = this.getOne(queryWrapper);
+        if (verifyEmail !=null){
+            throw new CustomerException("邮箱'"+email+"'已存在！",500);
+        }
+
+        String  code = VerifyCodeUtils.generateValidateCode(4).toString();
+
+        log.info("验证码：{}",code);
+
+        redisTemplate.opsForValue().set(email,code,Duration.ofMinutes(5));
+
+        String text = "你的验证码为："+"<font style='color:green'>"+code+"</font>"+"五分钟内有效！";
+        String title = "求职招聘网";
+
+        return emailService.sendMsg(email,text,title);
 
     }
 }

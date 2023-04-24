@@ -51,7 +51,6 @@ public class UserController {
     @PutMapping("/update")
     @ApiOperation(value = "修改用户信息")
     public R updateUser(@RequestBody User user){
-
         userService.updateUser(user);
         return R.success("修改成功！");
     }

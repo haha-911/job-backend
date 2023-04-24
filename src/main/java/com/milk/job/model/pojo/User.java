@@ -100,5 +100,8 @@ public class User implements Serializable {
     @TableField(exist = false)
     private Integer resumeId;
 
+    @TableField(exist = false)
+    private String code;
+
     private static final long serialVersionUID = 1L;
 }
