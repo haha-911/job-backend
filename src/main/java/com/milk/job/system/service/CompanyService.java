@@ -33,4 +33,7 @@ public interface CompanyService extends IService<Company>{
     void batchDelCompany(List<Integer> ids);
 
     void addCompany(Company company);
+
+    List<Company> getHotCompany();
+
 }

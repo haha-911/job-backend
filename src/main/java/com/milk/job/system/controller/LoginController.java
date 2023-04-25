@@ -105,12 +105,8 @@ public class LoginController {
     @PostMapping("/sendCode")
     @ApiOperation("发送邮箱验证码")
     public R sendCode(@RequestParam("email") String email){
-        Boolean isSuccess = userService.sendCode(email);
-        if(isSuccess){
-            return R.success("验证码已发送！注意查收");
-        }
-        return R.fail("发送失败！");
-
+        userService.sendCode(email);
+        return R.success("验证码已发送！注意查收");
     }
 
 

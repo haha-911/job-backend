@@ -57,6 +57,13 @@
 </foreach>
 and state =2 and is_delete = 0
 </update>
+<select id="getHotCompany" resultMap="BaseResultMap">
+
+SELECT t1.logo,t1.id
+FROM company AS t1 JOIN (SELECT ROUND(RAND() * ((SELECT MAX(id) FROM company)-(SELECT MIN(id) FROM company))+(SELECT MIN(id) FROM company)) AS id) AS t2
+WHERE t1.id >= t2.id and t1.state = 1 and is_delete = 0
+ORDER BY t1.id LIMIT 5;
+</select>
 
 
 </mapper>

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.milk.job.common.asynctask.ThreadService;
 import com.milk.job.common.enums.ResultEnum;
 import com.milk.job.common.exceptions.CustomerException;
 import com.milk.job.common.log.Log;
@@ -60,6 +61,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Resource
     private EmailService emailService;
+
+    @Resource
+    private ThreadService threadService;
 
     @Override
     public int batchInsert(List<User> list) {
@@ -119,6 +123,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         if(user.getEmail()!=null){
             String code = (String)redisTemplate.opsForValue().get(user.getEmail());
+            if(code == null){
+                throw new CustomerException(ResultEnum.EMAIL_CODE_EXPIRE);
+            }
             log.info("Code:{},getCode():{}",code,user.getCode());
             if (!user.getCode().equals(code)){
                 throw new CustomerException(ResultEnum.EMAIL_CODE_ERROR);
@@ -281,7 +288,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public Boolean sendCode(String email) {
+    public void sendCode(String email) {
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
 
         queryWrapper.eq(User::getEmail,email);
@@ -299,7 +306,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String text = "你的验证码为："+"<font style='color:green'>"+code+"</font>"+"五分钟内有效！";
         String title = "求职招聘网";
 
-        return emailService.sendMsg(email,text,title);
+        threadService.sendCode(emailService,email,text,title);
 
     }
 }

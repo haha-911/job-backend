@@ -47,5 +47,8 @@ public interface PositionService extends IService<Position> {
 
     Page<PositionDto> getJob(PositionVo positionVo);
 
+    void addViews(Integer id);
+
+    List<Position> getHotPosition();
 
 }

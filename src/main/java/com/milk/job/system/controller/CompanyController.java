@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.milk.job.common.R;
 import com.milk.job.model.dto.CompanyDto;
 import com.milk.job.model.pojo.Company;
+import com.milk.job.model.pojo.Position;
 import com.milk.job.model.vo.CompanyVo;
 import com.milk.job.system.service.CompanyService;
 import io.swagger.annotations.Api;
@@ -104,5 +105,12 @@ public class CompanyController {
     public R getOne(@PathVariable("id") Integer id){
         Company company = companyService.getById(id);
         return R.success(company);
+    }
+
+    @PostMapping("/hotCom")
+    @ApiOperation(value = "获取热门公司")
+    public R getHotCompany(){
+        List<Company> companyList = companyService.getHotCompany();
+        return R.success(companyList);
     }
 }

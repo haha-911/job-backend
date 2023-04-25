@@ -149,4 +149,10 @@
         order by p.release_date desc
     </if>
 </select>
+    <update id="addViews">
+             update position set hits = hits +1 where id = #{id} and is_delete = 0
+    </update>
+    <select id="getHotPosition" resultMap="BaseResultMap">
+    select id, title,city,salary_up,salary_down from  position where is_delete = 0 and state =1 order by hits limit 6;
+</select>
 </mapper>

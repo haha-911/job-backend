@@ -157,4 +157,9 @@ public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> impl
             hrCompanyMapper.insert(hrCompany);
         }
     }
+
+    @Override
+    public List<Company> getHotCompany() {
+        return companyMapper.getHotCompany();
+    }
 }

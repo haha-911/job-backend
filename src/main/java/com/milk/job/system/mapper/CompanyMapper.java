@@ -25,4 +25,6 @@ public interface CompanyMapper extends BaseMapper<Company> {
 
     void batchChangeState(@Param("ids") List<Integer> ids);
 
+    List<Company> getHotCompany();
+
 }

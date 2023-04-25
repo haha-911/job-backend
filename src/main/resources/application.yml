@@ -40,7 +40,7 @@ spring:
   #邮件服务配置
   mail:
     host: smtp.qq.com
-    username: 2134311920@qq.com
+    username: beibei-job@foxmail.com
     password: cljinfcdlcgzbeaa
     default-encoding: utf-8
     properties:

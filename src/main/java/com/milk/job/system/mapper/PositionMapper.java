@@ -37,4 +37,8 @@ public interface PositionMapper extends BaseMapper<Position> {
     Page<Position> getRefusePosition(Page<Position> page,@Param("positionVo") PositionVo positionVo);
 
 
+    void addViews(Integer id);
+
+    List<Position> getHotPosition();
+
 }

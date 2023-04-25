@@ -76,6 +76,13 @@ public class PositionController {
         return R.success(pageInfo);
     }
 
+    @PostMapping("/hotPos")
+    @ApiOperation(value = "获取热门职位")
+    public R getHotPosition(){
+        List<Position> positionList = positionService.getHotPosition();
+        return R.success(positionList);
+    }
+
     @PostMapping("/get/job")
     @ApiOperation(value = "前端分页查询职位")
     public R fontPosition(@RequestBody PositionVo positionVo){
