@@ -22,4 +22,8 @@ public interface NotifyMapper extends BaseMapper<Notify> {
     Page<NotifyDto> getPage(Page<Notify> page, @Param("notifyVo") NotifyVo notifyVo);
 
     void updateNotifyIsRead(@Param("ids") List<Integer> ids);
+
+    List<Notify> getUserNotify(@Param("id") Integer id,@Param("isRead")Integer isRead);
+
+    void allRead(@Param("id") Integer id);
 }

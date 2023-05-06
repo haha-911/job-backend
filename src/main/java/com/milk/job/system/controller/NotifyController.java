@@ -42,6 +42,18 @@ public class NotifyController {
         Page<NotifyDto> pageInfo = notifyService.getPage(notifyVo);
         return R.success(pageInfo);
     }
+    @PostMapping("/user/{id}/{isRead}")
+    @ApiOperation(value = "获取所有通知")
+    public R getPage(@PathVariable Integer id,@PathVariable("isRead") Integer isRead){
+        List<Notify> notifys = notifyService.getUserNotify(id,isRead);
+        return R.success(notifys);
+    }
+    @GetMapping("/allread/{id}")
+    @ApiOperation(value = "一键已读所有通知")
+    public R allRead(@PathVariable Integer id){
+        notifyService.allRead(id);
+        return R.success("操作成功！");
+    }
 
     @GetMapping("/{id}")
     @ApiOperation(value = "由id获取通知")

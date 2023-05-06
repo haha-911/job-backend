@@ -37,7 +37,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         //定义排除swagger访问的路径配置
         String[] swaggerExcludes=new String[]{"/*.html","/swagger-resources/**","/webjars/**","/favicon.ico","/v2/**"};
-        String[] userExcludes = new String[]{"/user/login","/registry","/sendCode","/job/position/get/**","/job/category/all","/job/company/get/**"};
+        String[] userExcludes = new String[]{"/user/login","/registry","/sendCode","/job/position/get/**","/job/category/all","/job/company/get/**","/job/position/hotPos","/job/company/hotCom"};
 
         InterceptorRegistration interceptorRegistration = registry.addInterceptor(loginInterceptor);
 

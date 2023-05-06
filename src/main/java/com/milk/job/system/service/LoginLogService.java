@@ -5,6 +5,7 @@ import com.milk.job.model.pojo.LoginLog;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.milk.job.model.vo.LoginLogVo;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -21,4 +22,6 @@ public interface LoginLogService extends IService<LoginLog>{
     LoginLog getPrevLogin(String  name);
 
     void delLoginlog(List<Integer> ids);
+
+    HashMap<String, Object> getCount();
 }

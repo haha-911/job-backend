@@ -71,7 +71,8 @@ public class CompanyController {
 
         log.info("数据：{}",company);
        companyService.addCompany(company);
-        return R.success("添加成功！");
+        Integer id = company.getId();
+        return R.success("添加成功！",id);
     }
 
     @DeleteMapping("/del/{id}")

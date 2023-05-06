@@ -22,4 +22,7 @@ public interface NotifyService extends IService<Notify>{
 
     void updateNotifyIsRead(List<Integer> ids);
 
+    List<Notify> getUserNotify(Integer id,Integer isRead);
+
+    void allRead(Integer id);
 }

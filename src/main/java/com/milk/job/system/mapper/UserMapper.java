@@ -17,6 +17,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     void batchRemove(@Param("ids") List<Integer> ids);
 
-    Integer selectCount(@Param("id") Integer id);
+    Integer selectCount(@Param("type") Integer type);
+
 
 }

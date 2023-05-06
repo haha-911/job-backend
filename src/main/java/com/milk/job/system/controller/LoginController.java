@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -113,7 +114,8 @@ public class LoginController {
     @GetMapping("/getCount")
     @ApiOperation("获取数量")
     public R getCount(){
-        return R.success();
+       HashMap<String ,Object> map =  loginLogService.getCount();
+        return R.success(map);
     }
 
     @GetMapping("/prev/{username}")

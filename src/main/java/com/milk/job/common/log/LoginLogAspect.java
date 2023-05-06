@@ -27,8 +27,8 @@ import javax.servlet.http.HttpServletRequest;
  * @Date 2023-01-17 16:11
  */
 
-//@Aspect
-//@Component
+@Aspect
+@Component
 @Slf4j
 public class LoginLogAspect {
 

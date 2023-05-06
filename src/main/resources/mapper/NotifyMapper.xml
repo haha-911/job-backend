@@ -34,7 +34,10 @@
 and n.is_delete  = 0
 </where>
 </select>
-<update id="updateNotifyIsRead">
+    <select id="getUserNotify" resultType="com.milk.job.model.pojo.Notify">
+        select id,title,create_time from notify where user_id=#{id} and is_delete = 0 and is_read=#{isRead}
+    </select>
+    <update id="updateNotifyIsRead">
     update notify set is_read = 1,time=(localtime()) where id in
     <foreach collection="ids" item="id" separator="," open="(" close=")" >
     #{id,jdbcType=INTEGER}
@@ -42,5 +45,8 @@ and n.is_delete  = 0
 and is_delete  =0 and is_read =0
 
 </update>
+    <update id="allRead">
+        update notify set is_read =1 where user_id=#{id}
+    </update>
 
 </mapper>

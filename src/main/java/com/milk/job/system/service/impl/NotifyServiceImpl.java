@@ -40,4 +40,14 @@ public class NotifyServiceImpl extends ServiceImpl<NotifyMapper, Notify> impleme
     public void updateNotifyIsRead(List<Integer> ids) {
         notifyMapper.updateNotifyIsRead(ids);
     }
+
+    @Override
+    public List<Notify> getUserNotify(Integer id,Integer isRead) {
+        return notifyMapper.getUserNotify(id,isRead);
+    }
+
+    @Override
+    public void allRead(Integer id) {
+        notifyMapper.allRead(id);
+    }
 }

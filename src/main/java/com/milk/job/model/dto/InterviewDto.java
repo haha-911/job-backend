@@ -11,15 +11,15 @@ import lombok.Data;
 @Data
 public class InterviewDto extends Interview {
 
-    private String nickname;
+    private String username;
 
     private String title;
 
-    private String HrName;
+    private String hrName;
 
     private String companyName;
 
-    private String email;
+    private String hrTel;
 
-    private String tel;
+    private String userTel;
 }

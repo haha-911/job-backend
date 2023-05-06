@@ -27,8 +27,8 @@
 
   <select id="getPage" resultType="com.milk.job.model.dto.InterviewDto">
         select i.*,p.title,c.name as companyName,
-                u.username as userName ,u.email as uemail,u.tel as utel,
-                h.username as HRName ,h.email as hemail,h.tel as htel
+                u.username as username ,u.tel as userTel,
+                h.username as hrName ,h.tel as hrTel
                 from interview i
                 join company c on i.company_id = c.id
                 join user u on i.user_id = u.id

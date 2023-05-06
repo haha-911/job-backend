@@ -41,6 +41,6 @@
     and is_delete =0
   </delete>
     <select id="selectCount" resultType="java.lang.Integer">
-        select count(*) from user where id = #{id}
+        select count(id) from user where type = #{type} and is_delete = 0
     </select>
 </mapper>
