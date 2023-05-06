@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8055
 
 spring:
   application:
@@ -14,7 +14,7 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-# 文件上传限制
+  # 文件上传限制
   servlet:
     multipart:
       max-file-size: -1
